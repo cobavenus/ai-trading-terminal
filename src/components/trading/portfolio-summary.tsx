@@ -16,7 +16,10 @@ export function PortfolioSummary() {
     cashBalance: 25000,
   };
 
-  const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+  const formatCurrency = (value: number) => {
+    // Фиксированное форматирование для избежания гидратационных ошибок
+    return `$${value.toLocaleString('en-US')}`;
+  };
   const formatPercent = (value: number) => `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
 
   return (

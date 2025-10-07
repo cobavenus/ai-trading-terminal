@@ -9,14 +9,47 @@ interface MarketDataTableProps {
 }
 
 export function MarketDataTable({ symbols }: MarketDataTableProps) {
-  // Mock data for demonstration
-  const marketData = symbols.map((symbol, index) => ({
-    symbol,
-    price: 100 + Math.random() * 200,
-    change: (Math.random() - 0.5) * 10,
-    changePercent: (Math.random() - 0.5) * 5,
-    volume: Math.floor(Math.random() * 1000000) + 100000,
-  }));
+  // Fixed mock data to prevent hydration mismatches
+  const getMockData = (symbol: string) => {
+    const mockPrices: { [key: string]: number } = {
+      'AAPL': 157.13,
+      'GOOGL': 244.86,
+      'MSFT': 378.85,
+      'TSLA': 248.42,
+      'AMZN': 186.51,
+      'META': 150.00,
+      'NFLX': 150.00,
+      'NVDA': 150.00,
+    };
+
+    // Deterministic pseudo-random function for consistent results
+    const seededRandom = (seed: string) => {
+      let hash = 0;
+      for (let i = 0; i < seed.length; i++) {
+        const char = seed.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+      return Math.abs(hash) / 2147483647; // Normalize to [0, 1)
+    };
+
+    const basePrice = mockPrices[symbol] || 150.00;
+
+    // Use deterministic seed based on symbol only
+    const random1 = seededRandom(`${symbol}_change`);
+    const random2 = seededRandom(`${symbol}_percent`);
+    const random3 = seededRandom(`${symbol}_volume`);
+
+    return {
+      symbol,
+      price: basePrice,
+      change: (random1 - 0.5) * 2, // Small variation around 0
+      changePercent: (random2 - 0.5) * 1,
+      volume: Math.floor(random3 * 1000000) + 100000,
+    };
+  };
+
+  const marketData = symbols.map(symbol => getMockData(symbol));
 
   return (
     <Card>

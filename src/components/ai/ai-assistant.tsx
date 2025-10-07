@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,6 +32,11 @@ export function AIAssistant() {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -138,9 +143,16 @@ export function AIAssistant() {
                       <User className="w-4 h-4 mt-1 flex-shrink-0" />
                     )}
                   </div>
-                  <p className="text-xs opacity-60 mt-2">
-                    {message.timestamp.toLocaleTimeString()}
-                  </p>
+                  {isMounted && (
+                    <p className="text-xs opacity-60 mt-2">
+                      {message.timestamp.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                      })}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

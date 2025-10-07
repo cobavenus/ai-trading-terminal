@@ -23,7 +23,7 @@ export function PerformanceChart() {
     { date: '2024-01-15', value: 110200 },
   ];
 
-  const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+  const formatCurrency = (value: number) => `$${value.toLocaleString('en-US')}`;
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',

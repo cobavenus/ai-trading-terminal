@@ -13,7 +13,7 @@ export function MarketOverview() {
     { name: 'Russell 2000', symbol: 'RUT', value: 2050, change: -15, changePercent: -0.73 },
   ];
 
-  const formatValue = (value: number) => value.toLocaleString();
+  const formatValue = (value: number) => value.toLocaleString('en-US');
   const formatChange = (change: number) => `${change >= 0 ? '+' : ''}${change.toFixed(2)}`;
   const formatPercent = (percent: number) => `${percent >= 0 ? '+' : ''}${percent.toFixed(2)}%`;
 

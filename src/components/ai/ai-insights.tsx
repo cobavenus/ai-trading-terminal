@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -17,6 +18,12 @@ interface Insight {
 }
 
 export function AIInsights() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const insights: Insight[] = [
     {
       id: '1',
@@ -127,9 +134,16 @@ export function AIInsights() {
                     {insight.symbol}
                   </Badge>
                 )}
-                <span className="text-xs text-muted-foreground">
-                  {insight.timestamp.toLocaleTimeString()}
-                </span>
+                {isMounted && (
+                  <span className="text-xs text-muted-foreground">
+                    {insight.timestamp.toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: false
+                    })}
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">
@@ -149,7 +163,14 @@ export function AIInsights() {
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              Последнее обновление: {new Date().toLocaleTimeString()}
+              {isMounted && (
+                <>Последнее обновление: {new Date().toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}</>
+              )}
             </span>
             <Badge variant="secondary" className="text-xs">
               <Zap className="w-3 h-3 mr-1" />

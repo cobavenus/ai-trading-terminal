@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,12 @@ interface Prediction {
 }
 
 export function MarketPredictions() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const predictions: Prediction[] = [
     {
       id: '1',
@@ -191,7 +198,9 @@ export function MarketPredictions() {
               <div className="flex items-center justify-between pt-2 border-t">
                 <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                   <Calendar className="w-3 h-3" />
-                  <span>Обновлено: {prediction.timestamp.toLocaleString()}</span>
+                  {isMounted && (
+                    <span>Обновлено: {new Date(prediction.timestamp).toLocaleString('en-US')}</span>
+                  )}
                 </div>
                 <Button size="sm" variant="outline">
                   Подробнее
@@ -204,7 +213,14 @@ export function MarketPredictions() {
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              Последнее обновление: {new Date().toLocaleTimeString()}
+              {isMounted && (
+                <>Последнее обновление: {new Date().toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}</>
+              )}
             </span>
             <Badge variant="secondary" className="text-xs">
               <Zap className="w-3 h-3 mr-1" />

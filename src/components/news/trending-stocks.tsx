@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,12 @@ interface TrendingStock {
 }
 
 export function TrendingStocks() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const trendingStocks: TrendingStock[] = [
     {
       symbol: 'AAPL',
@@ -182,7 +189,14 @@ export function TrendingStocks() {
             <div className="flex items-center justify-between pt-2 border-t">
               <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                 <Activity className="w-3 h-3" />
-                <span>Обновлено: {new Date().toLocaleTimeString()}</span>
+                {isMounted && (
+                  <span>Обновлено: {new Date().toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                  })}</span>
+                )}
               </div>
               <div className="flex space-x-2">
                 <Button size="sm" variant="outline">

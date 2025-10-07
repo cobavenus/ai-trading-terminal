@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
@@ -17,6 +18,8 @@ import {
   User,
   Bell,
   Search,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 const navigation = [
@@ -30,7 +33,13 @@ const navigation = [
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <nav className="bg-background border-b border-border sticky top-0 z-50">
@@ -79,6 +88,19 @@ export function Navigation() {
             <Button variant="ghost" size="icon">
               <User className="w-4 h-4" />
             </Button>
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -117,6 +139,32 @@ export function Navigation() {
                 </Link>
               );
             })}
+
+            {/* Mobile theme toggle */}
+            {mounted && (
+              <div className="px-3 py-2">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    setTheme(theme === 'dark' ? 'light' : 'dark');
+                    setIsOpen(false);
+                  }}
+                >
+                  {theme === 'dark' ? (
+                    <>
+                      <Sun className="w-5 h-5 mr-3" />
+                      Light Mode
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="w-5 h-5 mr-3" />
+                      Dark Mode
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}

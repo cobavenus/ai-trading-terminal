@@ -28,36 +28,50 @@ const TIMEFRAMES = [
 export function TradingDashboard() {
   const [selectedSymbol, setSelectedSymbol] = useState('AAPL');
   const [selectedTimeframe, setSelectedTimeframe] = useState('1d');
-  const [marketData, setMarketData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Generate mock data with fixed values to prevent hydration mismatches
+  const generateMockData = (symbol: string) => {
+    const data = [];
+    const basePrices: { [key: string]: number } = {
+      'AAPL': 150,
+      'GOOGL': 2800,
+      'MSFT': 400,
+      'TSLA': 250,
+      'AMZN': 3000,
+    };
+
+    const basePrice = basePrices[symbol] || 150;
+
+    for (let i = 100; i >= 0; i--) {
+      const timestamp = new Date();
+      timestamp.setDate(timestamp.getDate() - i);
+
+      // Use deterministic calculations instead of Math.random()
+      const volatility = 0.02; // 2% volatility
+      const trend = i * 0.001; // Slight upward trend
+      const seasonal = Math.sin(i * 0.1) * 0.005; // Seasonal variation
+
+      const price = basePrice * (1 + trend + seasonal + (i % 2 === 0 ? volatility : -volatility) * (i / 100));
+
+      data.push({
+        timestamp: timestamp.toISOString(),
+        open: price * (1 + (Math.abs(i) % 3 - 1) * 0.001), // Small opening variation
+        high: price * (1 + Math.abs(i % 5) * 0.002), // Higher high
+        low: price * (1 - Math.abs(i % 5) * 0.002), // Lower low
+        close: price,
+        volume: Math.floor(500000 + i * 1000 + (i % 10) * 50000), // Volume with some pattern
+      });
+    }
+
+    return data;
+  };
+
+  const [marketData, setMarketData] = useState<any[]>(() => generateMockData('AAPL'));
 
   // Mock data for demonstration
   useEffect(() => {
-    const generateMockData = () => {
-      const data = [];
-      const basePrice = selectedSymbol === 'AAPL' ? 150 : selectedSymbol === 'GOOGL' ? 2800 : 100;
-
-      for (let i = 100; i >= 0; i--) {
-        const timestamp = new Date();
-        timestamp.setDate(timestamp.getDate() - i);
-
-        const change = (Math.random() - 0.5) * 0.02; // ±1% change
-        const price = basePrice * (1 + change * i / 100);
-
-        data.push({
-          timestamp: timestamp.toISOString(),
-          open: price,
-          high: price * (1 + Math.random() * 0.01),
-          low: price * (1 - Math.random() * 0.01),
-          close: price,
-          volume: Math.floor(Math.random() * 1000000) + 100000,
-        });
-      }
-
-      return data;
-    };
-
-    setMarketData(generateMockData());
+    setMarketData(generateMockData(selectedSymbol));
     setIsLoading(false);
   }, [selectedSymbol]);
 

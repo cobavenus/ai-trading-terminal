@@ -59,9 +59,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} antialiased bg-background text-foreground`}>
         <Providers>
-          <div className="min-h-screen bg-background">
+          <div className="min-h-screen bg-background text-foreground">
             <Navigation />
             <main className="container mx-auto px-4 py-8">
               {children}

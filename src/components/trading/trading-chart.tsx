@@ -25,7 +25,14 @@ export function TradingChart({ data, symbol, timeframe }: TradingChartProps) {
 
     // Очищаем предыдущий график, если он существует
     if (chartRef.current) {
-      chartRef.current.remove();
+      try {
+        chartRef.current.remove();
+        chartRef.current = null;
+      } catch (error) {
+        // График уже уничтожен или объект поврежден, пропускаем ошибку
+        console.warn('Chart cleanup error:', error);
+        chartRef.current = null;
+      }
     }
 
     // Создаем график
@@ -107,7 +114,13 @@ export function TradingChart({ data, symbol, timeframe }: TradingChartProps) {
     return () => {
       window.removeEventListener('resize', handleResize);
       if (chartRef.current) {
-        chartRef.current.remove();
+        try {
+          chartRef.current.remove();
+        } catch (error) {
+          // График уже уничтожен, пропускаем ошибку
+          console.warn('Chart cleanup error during unmount:', error);
+        }
+        chartRef.current = null;
       }
     };
   }, [data, symbol, timeframe]);

@@ -17,7 +17,7 @@ export function PortfolioOverview() {
     ]
   };
 
-  const formatCurrency = (value: number) => `$${value.toLocaleString()}`;
+  const formatCurrency = (value: number) => `$${value.toLocaleString('en-US')}`;
   const formatPercent = (value: number) => `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
 
   return (
