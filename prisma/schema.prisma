@@ -1,0 +1,332 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// =============================================================================
+// USER MANAGEMENT & AUTHENTICATION
+// =============================================================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  portfolios    Portfolio[]
+  trades        Trade[]
+  watchlists    Watchlist[]
+  aiInteractions AIInteraction[]
+  achievements  UserAchievement[]
+  apiUsage      ApiUsage[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// =============================================================================
+// TRADING & PORTFOLIO MANAGEMENT
+// =============================================================================
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  balance     Decimal  @default(100000) // Starting virtual balance
+  currency    String   @default("USD")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades Trade[]
+  positions Position[]
+
+  @@unique([userId, name])
+}
+
+model Position {
+  id           String   @id @default(cuid())
+  portfolioId  String
+  symbol       String
+  quantity     Decimal
+  avgPrice     Decimal
+  currentPrice Decimal?
+  marketValue  Decimal?
+  pnl          Decimal?
+  pnlPercent   Decimal?
+  side         String   // "long" or "short"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@unique([portfolioId, symbol])
+}
+
+model Trade {
+  id          String   @id @default(cuid())
+  userId      String
+  portfolioId String
+  symbol      String
+  side        String   // "buy" or "sell"
+  quantity    Decimal
+  price       Decimal
+  total       Decimal
+  fees        Decimal  @default(0)
+  type        String   @default("market") // "market", "limit", "stop"
+  status      String   @default("executed") // "pending", "executed", "cancelled"
+  executedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@index([userId, symbol])
+  @@index([portfolioId, symbol])
+}
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  symbols   String[] // Array of ticker symbols
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+}
+
+// =============================================================================
+// MARKET DATA & ANALYTICS
+// =============================================================================
+
+model MarketData {
+  id        String   @id @default(cuid())
+  symbol    String
+  timestamp DateTime
+  open      Decimal
+  high      Decimal
+  low       Decimal
+  close     Decimal
+  volume    BigInt
+  source    String   // "alpha_vantage", "polygon", "yahoo"
+
+  // Technical indicators (stored as JSON)
+  indicators Json?
+
+  // Vector embedding for similarity search (stored as string)
+  embedding String?  @db.Text
+
+  createdAt DateTime @default(now())
+
+  @@unique([symbol, timestamp])
+  @@index([symbol])
+}
+
+model News {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  summary     String?
+  url         String?
+  publishedAt DateTime
+  source      String
+  symbols     String[] // Related ticker symbols
+
+  // Sentiment analysis
+  sentiment   String?  // "positive", "negative", "neutral"
+  confidence  Float?
+
+  // Vector embedding for RAG (stored as string)
+  embedding   String?  @db.Text
+
+  createdAt   DateTime @default(now())
+
+  @@index([publishedAt])
+  @@index([symbols])
+}
+
+model EconomicIndicator {
+  id          String   @id @default(cuid())
+  name        String   // "GDP", "Inflation", "Unemployment", etc.
+  value       Decimal
+  unit        String   // "%", "USD", "points", etc.
+  period      String   // "Q1 2024", "January 2024"
+  publishedAt DateTime
+  source      String   // "BLS", "FED", "ECB", etc.
+
+  createdAt   DateTime @default(now())
+
+  @@unique([name, period])
+}
+
+// =============================================================================
+// AI & RAG SYSTEM
+// =============================================================================
+
+model AIInteraction {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // "chat", "analysis", "recommendation"
+  query       String   @db.Text
+  response    String   @db.Text
+  context     Json?    // Additional context data
+
+  // RAG information
+  sources     Json?    // Referenced documents/sources
+  confidence  Float?
+
+  // Performance tracking
+  accuracy    Float?   // If actual outcome can be measured
+  feedback    String?  // User feedback on response quality
+
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+  @@index([createdAt])
+}
+
+model AIDocument {
+  id        String   @id @default(cuid())
+  type      String   // "research", "analysis", "strategy"
+  title     String
+  content   String   @db.Text
+  metadata  Json?    // Author, tags, etc.
+
+  // Vector embedding for similarity search (stored as string)
+  embedding String    @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+}
+
+model TradingStrategy {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @db.Text
+  parameters  Json     // Strategy parameters
+  performance Json?    // Backtesting results
+
+  // AI-optimized parameters
+  aiOptimized Boolean  @default(false)
+  optimizationData Json?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([name])
+}
+
+// =============================================================================
+// SOCIAL & COMMUNITY FEATURES
+// =============================================================================
+
+model UserAchievement {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // "profit_milestone", "accuracy_milestone", etc.
+  name        String
+  description String
+  badge       String?  // Icon/emoji
+  unlockedAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+}
+
+model Leaderboard {
+  id        String   @id @default(cuid())
+  type      String   // "daily", "weekly", "monthly", "all_time"
+  period    String   // "2024-01", "2024-W01", etc.
+
+  // Rankings stored as JSON for performance
+  rankings  Json     // [{userId, score, rank}]
+
+  createdAt DateTime @default(now())
+
+  @@unique([type, period])
+  @@index([type])
+}
+
+// =============================================================================
+// SYSTEM & ANALYTICS
+// =============================================================================
+
+model SystemMetric {
+  id        String   @id @default(cuid())
+  name      String   // "api_calls", "response_time", "error_rate"
+  value     Decimal
+  unit      String   // "count", "ms", "percentage"
+  timestamp DateTime @default(now())
+
+  @@index([name, timestamp])
+}
+
+model ApiUsage {
+  id        String   @id @default(cuid())
+  userId    String?
+  endpoint  String
+  method    String
+  status    Int
+  duration  Int      // Response time in ms
+  timestamp DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, timestamp])
+  @@index([endpoint, timestamp])
+}

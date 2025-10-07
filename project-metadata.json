@@ -1,0 +1,251 @@
+{
+  "name": "AI Trading Terminal",
+  "description": "AI-powered trading terminal with RAG system for financial analysis and algorithmic trading",
+  "version": "1.0.0",
+  "author": "AI Terminal Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ai-trading-terminal.git"
+  },
+  "keywords": [
+    "trading",
+    "terminal",
+    "ai",
+    "rag",
+    "financial-analysis",
+    "algorithmic-trading",
+    "nextjs",
+    "typescript",
+    "supabase",
+    "vercel",
+    "metal",
+    "mlx"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "architecture": {
+    "frontend": {
+      "framework": "Next.js 14",
+      "language": "TypeScript",
+      "styling": "Tailwind CSS + DaisyUI",
+      "charts": "TradingView Lightweight Charts",
+      "state": "Zustand + Jotai",
+      "forms": "React Hook Form + Zod"
+    },
+    "backend": {
+      "platform": "Vercel + Supabase",
+      "database": "PostgreSQL with pgvector",
+      "auth": "NextAuth.js",
+      "orm": "Prisma",
+      "api": "Next.js API Routes + Edge Functions"
+    },
+    "ai": {
+      "rag": "Supabase pgvector + OpenAI",
+      "local": "MLX + FinBERT on Metal",
+      "embeddings": "OpenAI text-embedding-ada-002",
+      "chat": "GPT-3.5-turbo + GPT-4"
+    },
+    "trading": {
+      "charts": "TradingView integration",
+      "data": "Alpha Vantage + Yahoo Finance + Polygon.io",
+      "simulation": "Paper trading with virtual accounts",
+      "analysis": "Technical + Fundamental indicators"
+    }
+  },
+  "features": [
+    {
+      "name": "Real-time Trading Charts",
+      "description": "Interactive financial charts with TradingView integration",
+      "tech": ["TradingView Lightweight Charts", "React", "WebSocket"]
+    },
+    {
+      "name": "AI-Powered Analysis",
+      "description": "RAG system for contextual trading recommendations",
+      "tech": ["OpenAI", "Supabase pgvector", "MLX FinBERT"]
+    },
+    {
+      "name": "Paper Trading",
+      "description": "Virtual trading accounts for strategy testing",
+      "tech": ["Prisma", "Supabase", "React Hook Form"]
+    },
+    {
+      "name": "Multi-Asset Support",
+      "description": "Stocks, crypto, forex, and commodities",
+      "tech": ["Alpha Vantage API", "Yahoo Finance", "Polygon.io"]
+    },
+    {
+      "name": "Advanced Analytics",
+      "description": "Correlation analysis and pattern recognition",
+      "tech": ["D3.js", "Python MLX", "Metal GPU acceleration"]
+    },
+    {
+      "name": "Social Features",
+      "description": "Leaderboards, achievements, and community insights",
+      "tech": ["Next.js", "Supabase realtime", "WebSocket"]
+    }
+  ],
+  "deployment": {
+    "platform": "Vercel",
+    "database": "Supabase",
+    "cdn": "Vercel Edge Network",
+    "monitoring": "Vercel Analytics",
+    "limits": {
+      "bandwidth": "100GB/month",
+      "build_time": "6000 minutes/month",
+      "database": "500MB",
+      "functions": "100,000 invocations/month"
+    }
+  },
+  "data_sources": [
+    {
+      "name": "Alpha Vantage",
+      "type": "Market Data API",
+      "usage": "Historical prices, technical indicators",
+      "limit": "500 requests/day (free tier)",
+      "cost": "Free"
+    },
+    {
+      "name": "Yahoo Finance",
+      "type": "Financial Data",
+      "usage": "Historical OHLCV, dividends, splits",
+      "limit": "Unlimited (free)",
+      "cost": "Free"
+    },
+    {
+      "name": "Polygon.io",
+      "type": "Real-time Data",
+      "usage": "Live quotes, news, fundamentals",
+      "limit": "5 requests/minute (free)",
+      "cost": "Free tier available"
+    },
+    {
+      "name": "MarketAux",
+      "type": "Financial News",
+      "usage": "News sentiment analysis",
+      "limit": "Free tier available",
+      "cost": "Free tier available"
+    },
+    {
+      "name": "Finnhub",
+      "type": "Financial API",
+      "usage": "Earnings, news, insider trading",
+      "limit": "60 requests/minute (free)",
+      "cost": "Free tier available"
+    }
+  ],
+  "ml_models": [
+    {
+      "name": "FinBERT",
+      "type": "Sentiment Analysis",
+      "framework": "MLX (Apple Metal)",
+      "purpose": "Financial text sentiment analysis",
+      "accuracy": "85%+ on financial texts",
+      "local": true
+    },
+    {
+      "name": "text-embedding-ada-002",
+      "type": "Text Embeddings",
+      "framework": "OpenAI API",
+      "purpose": "Document embeddings for RAG",
+      "dimensions": 1536,
+      "local": false
+    },
+    {
+      "name": "GPT-3.5-turbo",
+      "type": "Language Model",
+      "framework": "OpenAI API",
+      "purpose": "Trading recommendations and analysis",
+      "context": "16K tokens",
+      "local": false
+    }
+  ],
+  "performance": {
+    "targets": {
+      "page_load": "<2 seconds",
+      "chart_rendering": "<100ms",
+      "ai_response": "<3 seconds",
+      "data_processing": "<500ms"
+    },
+    "optimization": [
+      "Next.js App Router",
+      "React Server Components",
+      "Vercel Edge Functions",
+      "Supabase RLS policies",
+      "MLX GPU acceleration",
+      "Metal Performance Shaders"
+    ]
+  },
+  "security": {
+    "measures": [
+      "NextAuth.js authentication",
+      "Supabase RLS (Row Level Security)",
+      "API rate limiting",
+      "Input validation with Zod",
+      "HTTPS enforcement",
+      "CORS configuration"
+    ],
+    "compliance": [
+      "GDPR ready",
+      "Data encryption at rest",
+      "Secure API key management",
+      "Audit logging"
+    ]
+  },
+  "development": {
+    "ide": "Cursor IDE with AI agents",
+    "testing": "Jest + Testing Library",
+    "linting": "ESLint + Prettier",
+    "type_checking": "TypeScript strict mode",
+    "database": "Prisma Studio",
+    "deployment": "Vercel CLI"
+  },
+  "roadmap": [
+    {
+      "phase": "MVP",
+      "features": [
+        "Basic trading charts",
+        "Paper trading accounts",
+        "Simple AI recommendations",
+        "User authentication"
+      ],
+      "timeline": "2-3 weeks"
+    },
+    {
+      "phase": "Beta",
+      "features": [
+        "Advanced RAG system",
+        "Real-time market data",
+        "Social features",
+        "Mobile responsiveness"
+      ],
+      "timeline": "4-6 weeks"
+    },
+    {
+      "phase": "Production",
+      "features": [
+        "Local MLX models",
+        "Advanced analytics",
+        "API integrations",
+        "Performance optimization"
+      ],
+      "timeline": "8-12 weeks"
+    }
+  ],
+  "costs": {
+    "development": "Free (open source)",
+    "hosting": {
+      "vercel": "Free tier (hobby plan)",
+      "supabase": "Free tier (up to limits)",
+      "openai": "$5/month for API usage"
+    },
+    "scaling": {
+      "vercel_pro": "$20/month",
+      "supabase_pro": "$25/month",
+      "openai_usage": "Based on API calls"
+    }
+  }
+}
+
