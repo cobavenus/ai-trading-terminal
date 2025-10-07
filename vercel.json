@@ -1,14 +1,8 @@
 {
-  "name": "ai-trading-terminal",
   "version": 2,
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "functions": {
-    "src/pages/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  "regions": ["iad1"]
 }
