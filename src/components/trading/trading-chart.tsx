@@ -23,6 +23,11 @@ export function TradingChart({ data, symbol, timeframe }: TradingChartProps) {
   useEffect(() => {
     if (!chartContainerRef.current || !data.length) return;
 
+    // Очищаем предыдущий график, если он существует
+    if (chartRef.current) {
+      chartRef.current.remove();
+    }
+
     // Создаем график
     const chart = createChart(chartContainerRef.current, {
       layout: {
@@ -77,10 +82,6 @@ export function TradingChart({ data, symbol, timeframe }: TradingChartProps) {
         type: 'volume',
       },
       priceScaleId: '',
-      scaleMargins: {
-        top: 0.8,
-        bottom: 0,
-      },
     });
 
     const volumeData = data.map((item) => ({
@@ -105,7 +106,9 @@ export function TradingChart({ data, symbol, timeframe }: TradingChartProps) {
     // Очищаем при размонтировании
     return () => {
       window.removeEventListener('resize', handleResize);
-      chart.remove();
+      if (chartRef.current) {
+        chartRef.current.remove();
+      }
     };
   }, [data, symbol, timeframe]);
 

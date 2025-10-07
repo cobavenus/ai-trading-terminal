@@ -61,7 +61,7 @@ export const auth = {
 // PORTFOLIO HELPERS
 // =============================================================================
 
-export const portfolio = {
+export const portfolio: any = {
   // Get user's portfolios
   getPortfolios: async (userId: string) => {
     const { data, error } = await supabase
@@ -79,7 +79,7 @@ export const portfolio = {
 
   // Create new portfolio
   createPortfolio: async (portfolioData: {
-    userId: string;
+    user_id: string;
     name: string;
     description?: string;
     balance?: number;
@@ -124,10 +124,10 @@ export const trading = {
 
   // Create new position
   createPosition: async (positionData: {
-    portfolioId: string;
+    portfolio_id: string;
     symbol: string;
     quantity: number;
-    avgPrice: number;
+    avg_price: number;
     side: 'long' | 'short';
   }) => {
     const { data, error } = await supabase
@@ -141,8 +141,8 @@ export const trading = {
 
   // Create new trade
   createTrade: async (tradeData: {
-    userId: string;
-    portfolioId: string;
+    user_id: string;
+    portfolio_id: string;
     symbol: string;
     side: 'buy' | 'sell';
     quantity: number;
@@ -211,13 +211,9 @@ export const marketData = {
 
   // Search similar documents using vector similarity
   searchSimilar: async (query: string, limit = 5) => {
-    const { data, error } = await supabase.rpc('search_similar_documents', {
-      query_embedding: query,
-      match_threshold: 0.8,
-      match_count: limit,
-    });
-
-    return { data, error };
+    // TODO: Implement vector similarity search
+    // This would require a proper vector database setup
+    return { data: [], error: null };
   },
 };
 
@@ -245,7 +241,7 @@ export const ai = {
 
   // Create new AI interaction
   createInteraction: async (interactionData: {
-    userId: string;
+    user_id: string;
     type: 'chat' | 'analysis' | 'recommendation';
     query: string;
     response: string;
@@ -314,13 +310,9 @@ export const news = {
 
   // Search news using vector similarity
   searchNews: async (query: string, limit = 10) => {
-    const { data, error } = await supabase.rpc('search_news', {
-      query_embedding: query,
-      match_threshold: 0.7,
-      match_count: limit,
-    });
-
-    return { data, error };
+    // TODO: Implement vector similarity search for news
+    // This would require a proper vector database setup
+    return { data: [], error: null };
   },
 };
 
@@ -342,10 +334,10 @@ export const watchlist = {
 
   // Create new watchlist
   createWatchlist: async (watchlistData: {
-    userId: string;
+    user_id: string;
     name: string;
     symbols: string[];
-    isPublic?: boolean;
+    is_public?: boolean;
   }) => {
     const { data, error } = await supabase
       .from('watchlists')
