@@ -37,14 +37,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, symbol, quantity, averagePrice } = body;
+    const { userId, name, description } = body;
     
     const portfolio = await prisma.portfolio.create({
       data: {
         userId,
-        symbol,
-        quantity,
-        averagePrice
+        name: name || 'Default Portfolio',
+        description: description || null
       }
     });
     
