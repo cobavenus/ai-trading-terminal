@@ -23,16 +23,21 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { symbol, quantity, price, type, userId } = body;
+    const { symbol, quantity, price, side, userId, portfolioId } = body;
+    
+    const total = quantity * price;
     
     const trade = await prisma.trade.create({
       data: {
+        userId,
+        portfolioId: portfolioId || 'default',
         symbol,
+        side: side || 'buy',
         quantity,
         price,
-        type,
-        userId,
-        status: 'PENDING'
+        total,
+        type: 'market',
+        status: 'executed'
       }
     });
     
